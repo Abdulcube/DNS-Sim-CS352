@@ -8,9 +8,9 @@ db= {}
 for line in database:
     list = line.strip('\n').split(" ")
     if list[2] == "A":
-        db[list[0].lower()] = list[1]
+        db[list[0].lower()] = list[1] + " A"
     if list[2] == "NS":
-        db["NS"] = list[0]
+        db["NS"] = list[0]+ " NS"
 
 print(db)
 #Sets the ports and hosts
