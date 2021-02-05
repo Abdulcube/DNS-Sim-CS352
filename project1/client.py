@@ -22,7 +22,7 @@ for line in queries:
             print(query + " :: " + code[0] )
         else:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as t:
-                t.connect((HOST, TPORT))
+                t.connect((code[0], TPORT))
                 t.sendall(str.encode(query))
                 data = t.recv(1024)
                 code = data.decode("utf-8")
