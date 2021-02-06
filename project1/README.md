@@ -1,0 +1,7 @@
+# Internet Technology - Project 1: Recursive DNS client and DNS servers
+## By Abdulrahman Abdulrahman (aa1684) and Manav Patel (mjp430)
+
+### Briefly discuss how you implemented your recursive client functionality.
+The client function runs by first reading through HNS file and spliting the file by line to get the domain names. At the same time, we also delete any previous files named "RESOLVED.txt" in order to prepare for writing a new one. Our implementation loops through the found domains and attempts to connect to the root DNS server to request the DNS lookup. The root server will return a response and if the flag returned is "A", we simply write the out to the "RESOLVED.txt" file and continue looping through the domains. If the returned flag is "NS", this indicates that the root server did not have an answer to our query and we must now make a connection to the top-level DNS server for our query. Similarly to the root DNS server, we send the same request to the top-level DNS server and receive a response with a flag. If the flag was "A", we can simply write the response the server provided to our "RESOLVED.txt" file. If the response was "NS" (which in our implementation indicates a failure), the top-level DNS server did not have an answer to our query either. In this scenario, we output as instructed, printing the hostname as well as an error message to the file. 
+
+Both the root DNS server and top-level DNS servers function similarly. 
