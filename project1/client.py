@@ -27,8 +27,13 @@ def client():
         PORT = 26844"""
 
         HOST = sys.argv[1]
-        PORT = int(sys.argv[2])
-        TPORT = int(sys.argv[3])
+        # Make sure our ports are integers
+        try:
+            PORT = int(sys.argv[2])
+            TPORT = int(sys.argv[3])
+        except ValueError:
+            print("Error: Please ensure you are using proper Ports")
+            exit()
 
         # Connect to the RS
         try:
