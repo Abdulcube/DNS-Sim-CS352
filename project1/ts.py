@@ -1,32 +1,50 @@
 import socket
 import sys
-#Opens file and gets all ip addresses needed
-#Stores it in db dictionary
-file = open('PROJI-DNSTS.txt', 'r')
-database = file.readlines()
-db= {}
-for line in database:
-    list = line.strip('\n').split(" ")
-    db[list[0].lower()] = list[1] 
 
-print(db)
+# Opens file and gets all ip addresses needed
+# Stores it in db dictionary
+def read_dnsts():
+    file = open('PROJI-DNSTS.txt', 'r')
+    database = file.readlines()
+    db = {}
 
-HOST = "127.0.0.1"
-PORT = int(sys.argv[1])
-while True:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        print("\n")
-        pass
-        s.bind((HOST, PORT))
-        s.listen()
-        conn, addr = s.accept()
-        print("Connected to ", addr )
+    for line in database:
+        list = line.strip('\n').split(" ")
+        db[list[0].lower()] = list[1] 
+    
+    #print(db)
+    return db
 
-        with conn:
-            data = conn.recv(1024).decode("utf-8")
-            print(data)
-            #Checks in our dictionary, if not sends the localhost
-            if data in db:
-                conn.sendall(str.encode(db[data]))
-            else:
-                conn.sendall(b'L')
+def tserver():
+    HOST = "0.0.0.0"
+    PORT = int(sys.argv[1])
+
+    # Get DNS file
+    db = read_dnsts()
+
+    try:
+        ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #print("[S]: Server socket created")
+    except socket.error as err:
+        print('socket open error: {}\n'.format(err))
+        exit()
+
+    ss.bind((HOST, PORT))
+    ss.listen(1)
+
+    while True:
+        conn, addr = ss.accept()
+        print("Connected to ", addr)
+
+        #with conn:
+        data = conn.recv(1024).decode("utf-8")
+        print(data)
+        # Checks in our dictionary, if not sends the localhost
+        if data in db:
+            conn.sendall(str.encode(db[data]))
+        else:
+            conn.sendall(b'NS')
+
+
+if __name__ == "__main__":
+    tserver()
