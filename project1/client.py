@@ -1,5 +1,6 @@
 import socket
 import os
+import sys
 
 def client():
     # Read the list of domains
@@ -11,18 +12,18 @@ def client():
         os.remove("RESOLVED.txt")
     except OSError:
         pass
-    resolved = open("RESOLVED.txt", "a")  
+    resolved = open("RESOLVED.txt", "a")
 
     # Loop through each domain name and connect to our rs and/or ts for DNS lookups
     for line in queries:
         query = line.strip('\n').lower()
-        HOST = 'kill.cs.rutgers.edu'
+        """HOST = '127.0.0.1'
         TPORT = 26577
-        PORT = 65432
+        PORT = 26844"""
 
-        """HOST = sys.argv[1]
+        HOST = sys.argv[1]
         PORT = int(sys.argv[2])
-        TPORT = int(sys.argv[3])"""
+        TPORT = int(sys.argv[3])
 
         # Connect to the RS
         try:
@@ -37,14 +38,14 @@ def client():
         cs.connect((AHOST, PORT))
         cs.sendall(str.encode(query))
 
-        # Receive lookup from RS 
+        # Receive lookup from RS
         data = cs.recv(1024)
         code = data.decode("utf-8").split(" ")
 
         # If found in RS, write to RESOLVED.txt, else continue lookup in TS
         if code[1] == "A" :
             resolved.write(query + " " + code[0] + " A\n")
-            #print(query + " - " + code[0] + " A")
+            print(query + " - " + code[0] + " A")
         else:
             # Connect to the TS
             try:
@@ -58,17 +59,17 @@ def client():
             ct.connect((code[0], TPORT))
             ct.sendall(str.encode(query))
 
-            # Receive lookup from TS 
+            # Receive lookup from TS
             data = ct.recv(1024)
             code = data.decode("utf-8")
 
             # If query returned "NS", write Host Not Found to file, otherwise write the reponse to file
             if code == "NS" :
                 resolved.write(query + " - " + "Error:HOST NOT FOUND\n")
-                #print(query + " - " + "Error:HOST NOT FOUND")
+                print(query + " - " + "Error:HOST NOT FOUND")
             else:
                 resolved.write(query + " " + code + " A\n")
-                #print(query + " " + code + " A")
+                print(query + " " + code + " A")
     print("Done")
 
 
