@@ -3,6 +3,11 @@ import os
 import sys
 
 def client():
+    # Check if we have the proper arguments
+    if len(sys.argv) != 4:
+        print("Error: Please run the program properly. Format is: python client.py rsHostname rsListPort tsListenPort")
+        exit()
+    
     # Read the list of domains
     file = open('PROJI-HNS.txt', 'r')
     queries = file.readlines()

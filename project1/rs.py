@@ -19,6 +19,11 @@ def read_dnsrs():
     return db
 
 def rserver():
+    # Make sure we have a port number
+    if len(sys.argv) != 2:
+        print("Error: Please use the proper command: python rs.py rsListenPort")
+        exit()
+
     # Sets the ports and hosts
     HOST = "0.0.0.0"
     PORT = int(sys.argv[1])

@@ -16,6 +16,11 @@ def read_dnsts():
     return db
 
 def tserver():
+    # Make sure we have a port number
+    if len(sys.argv) != 2:
+        print("Error: Please use the proper command: python ts.py tsListenPort")
+        exit()
+    
     HOST = "0.0.0.0"
     PORT = int(sys.argv[1])
 
