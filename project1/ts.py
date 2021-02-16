@@ -11,8 +11,8 @@ def read_dnsts():
 
     for line in database:
         list = line.strip('\n').split(" ")
-        db[list[0].lower()] = list[1] 
-    
+        db[list[0].lower()] = list[1]
+
     #print(db)
     return db
 
@@ -21,7 +21,7 @@ def tserver():
     if len(sys.argv) != 2:
         print("Error: Please use the proper command: python ts.py tsListenPort")
         exit()
-    
+
     HOST = "0.0.0.0"
     PORT = int(sys.argv[1])
 
@@ -29,18 +29,18 @@ def tserver():
     db = read_dnsts()
 
     try:
-        ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        connectSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #print("[S]: Server socket created")
     except socket.error as err:
-        print('socket open error: {}\n'.format(err))
+        print('Socket Opening error: {}\n'.format(err))
         exit()
 
-    ss.bind((HOST, PORT))
-    ss.listen(1)
+    connectSock.bind((HOST, PORT))
+    connectSock.listen(1)
 
     while True:
-        conn, addr = ss.accept()
-        print("Connected to ", addr)
+        conn, addr = connectSock.accept()
+        print("Connection to address: ", addr)
 
         #with conn:
         data = conn.recv(1024).decode("utf-8")

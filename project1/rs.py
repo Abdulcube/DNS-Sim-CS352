@@ -15,7 +15,7 @@ def read_dnsrs():
             db[list[0].lower()] = list[1] + " A"
         if list[2] == "NS":
             db["NS"] = list[0]+ " NS"
-    
+
     #print(db)
     return db
 
@@ -26,25 +26,26 @@ def rserver():
         exit()
 
     # Sets the ports and hosts
-    HOST = "0.0.0.0"
     PORT = int(sys.argv[1])
 
     # Get DNS file
     db = read_dnsrs()
 
     try:
-        ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        connectSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #print("[S]: Server socket created")
     except socket.error as err:
-        print('socket open error: {}\n'.format(err))
-        exit()
 
-    ss.bind((HOST, PORT))
-    ss.listen(1)
+        print("Socket Opening error")
+        exit()
+    #host address :
+    connectSock.bind(("0.0.0.0", PORT))
+
+    connectSock.listen(1)
 
     while True:
-        conn, addr = ss.accept()
-        print("Connected to ", addr)
+        conn, addr = connectSock.accept()
+        print("Connection to address: ", addr)
 
         #with conn:
         data = conn.recv(1024).decode("utf-8")
